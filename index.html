@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Socket Logs</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h3>>> Socket Logs</h3>
+        <code id="logs-placeholder">
+
+        </code>
+    </div>
+    <script>
+        var LOG_RECEIVE_FROM_DEVICE_EVENT = 'device-logs';
+        var LOG_PUBLISH_TO_WEB_CLIENT_EVENT = 'published-logs';
+        var LOG_PLACEHOLDER = 'logs-placeholder';
+        (function () {
+            var old = console.log;
+            var logger = document.getElementById(LOG_PLACEHOLDER);
+            console.log = function () {
+                for (var i = 0; i < arguments.length; i++) {
+                    if (typeof arguments[i] == 'object') {
+                        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
+                    } else {
+                        logger.innerHTML += arguments[i] + '<br />';
+                    }
+                    window.scrollTo(0,document.body.scrollHeight);
+                }
+            }
+        })();
+        $(function () {
+            var socket = io();
+            socket.on('connect', function () {
+                console.log('>> Connected!!');
+                socket.on(LOG_PUBLISH_TO_WEB_CLIENT_EVENT, function (data) {
+                    console.log('>> logs >> ', data);
+                    //document.getElementById("logsPlaceholder").innerHTML = document.getElementById("logsPlaceholder").innerHTML
+                });
+                socket.emit('kuch-bhi', {data: 'web-client-request'});
+                socket.on('disconnect', function (data) {
+                    console.log(">> Disconnected!!");
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
