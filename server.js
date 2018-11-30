@@ -42,7 +42,7 @@ io.on('connection', function (socket) {
 		if (SIMULATOR_ENABLE) {
 			console.log('Simulating logs...');
 			var count = 0;
-			setInterval(() => {
+			setTimeout(() => {
 				socket.broadcast.emit(LOG_PUBLISH_TO_WEB_CLIENT_EVENT, { data: 'Simulated Data!', count: ++count });
 			}, SIMULATOR_DELAY);
 		}
