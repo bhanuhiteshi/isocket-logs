@@ -23,7 +23,6 @@
         var LOG_RECEIVE_FROM_DEVICE_EVENT = 'device-logs';
         var LOG_PUBLISH_TO_WEB_CLIENT_EVENT = 'published-logs';
         var LOG_PLACEHOLDER = 'logs-placeholder';
-		/*
         (function () {
             var old = console.log;
             var logger = document.getElementById(LOG_PLACEHOLDER);
@@ -38,16 +37,16 @@
                 }
             }
         })();
-		*/
         $(function () {
             var socket = io();
             socket.on('connect', function () {
                 console.log('>> Connected!!');
+				socket.emit('kuch-bhi', {data: 'web-client-request'});
+				
                 socket.on(LOG_PUBLISH_TO_WEB_CLIENT_EVENT, function (data) {
                     console.log('>> logs >> ', data);
                     //document.getElementById("logsPlaceholder").innerHTML = document.getElementById("logsPlaceholder").innerHTML
                 });
-                socket.emit('kuch-bhi', {data: 'web-client-request'});
                 socket.on('disconnect', function (data) {
                     console.log(">> Disconnected!!");
                 });

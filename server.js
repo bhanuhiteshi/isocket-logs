@@ -5,8 +5,8 @@ var io = require('socket.io')(server);
 var ioMiddleware = require('socketio-wildcard')();
 io.use(ioMiddleware);
 
-var SIMULATOR_ENABLE = false;
-const SIMULATOR_DELAY = 1000;
+var SIMULATOR_ENABLE = true;
+const SIMULATOR_DELAY = 5000;
 //var LOG_RECEIVE_FROM_DEVICE_EVENT = 'device-logs';
 var LOG_RECEIVE_FROM_DEVICE_EVENT = '*';
 var LOG_PUBLISH_TO_WEB_CLIENT_EVENT = 'published-logs';
@@ -42,9 +42,9 @@ io.on('connection', function (socket) {
 		if (SIMULATOR_ENABLE) {
 			console.log('Simulating logs (ONCE)...');
 			var count = 0;
-			//setTimeout(() => {
+			setTimeout(() => {
 				socket.broadcast.emit(LOG_PUBLISH_TO_WEB_CLIENT_EVENT, { data: 'Simulated Data!', count: ++count });
-			//}, SIMULATOR_DELAY);
+			}, SIMULATOR_DELAY);
 		}
 	})();
 });
